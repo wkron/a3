@@ -5,3 +5,4 @@
 *.o
 *.tsv
 .vscode
+.DS_Store
