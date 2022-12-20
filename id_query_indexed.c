@@ -30,7 +30,7 @@ struct indexed_data* mk_indexed(struct record* rs, int n){
 }
 
 void free_indexed(struct indexed_data* data){
-    free_records(data->irs->record, data->n);
+    // free_records(data->irs->record, data->n);
     free(data->irs);
     free(data);
     return;
