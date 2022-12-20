@@ -51,11 +51,11 @@ void free_indexed(struct indexed_data* data){
 const struct record* lookup_binsort(struct indexed_data *data, int64_t needle){
     int n = data->n;
     struct index_record* irs = data->irs;
-    int64_t low = 0ll;
-    int64_t high = (int64_t)n;
-    int64_t i = 0ll;
-    while(high-low > 1ll){
-        i = (low+high)/2ll;
+    int low = 0;
+    int high = n;
+    int i = 0;
+    while(high-low > 1){
+        i = (low+high)/2;
         if(irs[i].osm_id == needle){
             return irs[i].record;
         }
