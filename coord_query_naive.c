@@ -5,16 +5,24 @@
 #include <stdint.h>
 #include <errno.h>
 #include <assert.h>
-
+#include <math.h>
 #include "record.h"
 #include "coord_query.h"
-
+double euclidean_distance(double x1, double y1, double x2, double y2) {
+  double dx = x2 - x1;
+  double dy = y2 - y1;
+  return sqrt(dx*dx + dy*dy);
+}
 struct naive_data {
   struct record *rs;
   int n;
 };
 
 struct naive_data* mk_naive(struct record* rs, int n) {
+  struct naive_data* naive_data = malloc(n*sizeof(struct naive_data));
+  naive_data->rs = rs;
+  naive_data->n = n;
+  return naive_data;
   assert(0);
   // TODO
 }
