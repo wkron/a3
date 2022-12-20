@@ -19,7 +19,15 @@ struct indexed_data {
 };
 
 int cmpfnc (const void* a, const void* b){
-    return (((struct record*)a)->osm_id - ((struct record*)b)->osm_id);
+    if(((struct record*)a)->osm_id - ((struct record*)b)->osm_id < 0ll){
+        return -1;
+    }
+    if (((struct record*)a)->osm_id - ((struct record*)b)->osm_id > 0ll) {
+        return 1;
+    }
+    else{
+        return 0;
+    }
 }
 
 struct indexed_data* mk_binsort (struct record* rs, int n){
@@ -43,21 +51,23 @@ void free_indexed(struct indexed_data* data){
 const struct record* lookup_binsort(struct indexed_data *data, int64_t needle){
     int n = data->n;
     struct index_record* irs = data->irs;
-    int low = 0;
-    int high = n;
-    int i = 0;
-    while(low != high){
-        // printf("%d has osm_id %lld \n",i, irs[i].osm_id);
-        i = (low+high)/2;
+    int64_t low = 0ll;
+    int64_t high = (int64_t)n;
+    int64_t i = 0ll;
+    while(high-low > 1ll){
+        i = (low+high)/2ll;
         if(irs[i].osm_id == needle){
             return irs[i].record;
         }
         if (irs[i].osm_id > needle){
-            high=i-1;
+            high=i;
         }
         else{
-            low=i+1;
+            low=i;
         }
+    }
+    if(irs[high].osm_id == needle){
+        return irs[high].record;
     }
     return NULL;
 }

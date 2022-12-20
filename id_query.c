@@ -22,7 +22,7 @@ int id_query_loop(int argc, char** argv, mk_index_fn mk_index, free_index_fn fre
 
   if (rs) {
     printf("Reading records: %dms\n", (int)runtime/1000);
-
+    printf("%i records read.\n", n);
     start = microseconds();
     void *index = mk_index(rs, n);
     runtime = microseconds()-start;
