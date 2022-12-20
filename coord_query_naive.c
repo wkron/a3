@@ -23,13 +23,11 @@ struct naive_data* mk_naive(struct record* rs, int n) {
   naive_data->rs = rs;
   naive_data->n = n;
   return naive_data;
-  assert(0);
 }
 
 void free_naive(struct naive_data* data) {
-  free_records(data->rs, data->n);
+  // free_records(data->rs, data->n);
   free(data);
-  assert(0);
 }
 
 const struct record* lookup_naive(struct naive_data *data, double lon, double lat) {
@@ -44,7 +42,6 @@ const struct record* lookup_naive(struct naive_data *data, double lon, double la
     }
   }
   return &records[shortestindex];
-  assert(0);
 }
 
 int main(int argc, char** argv) {
