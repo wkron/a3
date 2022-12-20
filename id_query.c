@@ -32,7 +32,7 @@ int id_query_loop(int argc, char** argv, mk_index_fn mk_index, free_index_fn fre
     size_t line_len;
 
     uint64_t runtime_sum = 0;
-    while (getline(&line, &line_len, stdin) != -1) {
+    while (getline(&line, &line_len, stdin) != -1) { //Change to "if" to test memory leak with ValGrind
       int64_t needle = atol(line);
 
       start = microseconds();

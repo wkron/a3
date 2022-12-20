@@ -5,7 +5,6 @@
 #include <stdint.h>
 #include <errno.h>
 #include <assert.h>
-//Comment
 #include "record.h"
 #include "id_query.h"
 
@@ -37,6 +36,7 @@ struct indexed_data* mk_binsort (struct record* rs, int n){
 void free_indexed(struct indexed_data* data){
     //Jeg er ikke sikker på om dette virker eller om der bliver leaket memory
     free_records(data->irs->record, data->n);
+    free(data->irs);
     free(data);
     return;
 }
