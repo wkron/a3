@@ -23,6 +23,7 @@ struct naive_data* mk_naive(struct record* rs, int n) {
 
 void free_naive(struct naive_data* data) {
   free_records(data->rs, data->n);
+  free(data);
 }
 
 const struct record* lookup_naive(struct naive_data *data, int64_t needle) {
