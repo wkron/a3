@@ -50,10 +50,12 @@ int id_query_loop(int argc, char** argv, mk_index_fn mk_index, free_index_fn fre
     }
 
     printf("Total query runtime: %dus\n", (int)runtime_sum);
-
+    start = microseconds();
     free(line);
     free_index(index);
     free_records(rs, n);
+    runtime = microseconds()-start;
+    printf("Freeing memory time: %dus\n", (int)runtime);
     return 0;
   } else {
     fprintf(stderr, "Failed to read input from %s (errno: %s)\n",

@@ -8,21 +8,23 @@
 #include "record.h"
 #include "id_query.h"
 
-struct index_record {
+
+struct index {
     int64_t osm_id;
-    struct record *record;
+    int original_index;
 };
 
 struct indexed_data {
-    struct index_record *irs;
+    struct record *rs;
+    struct index *index;
     int n; 
 };
 
 int cmpfnc (const void* a, const void* b){
-    if(((struct record*)a)->osm_id - ((struct record*)b)->osm_id < 0ll){
+    if(((struct index*)a)->osm_id - ((struct index*)b)->osm_id < 0ll){
         return -1;
     }
-    if (((struct record*)a)->osm_id - ((struct record*)b)->osm_id > 0ll) {
+    if (((struct index*)a)->osm_id - ((struct index*)b)->osm_id > 0ll) {
         return 1;
     }
     else{
@@ -32,41 +34,43 @@ int cmpfnc (const void* a, const void* b){
 
 struct indexed_data* mk_binsort (struct record* rs, int n){
     struct indexed_data* indexed_data = malloc(sizeof(struct indexed_data));
-    indexed_data->irs = malloc(n*sizeof(struct index_record));
-    qsort(rs, n, sizeof(struct record), cmpfnc);
-    for(int i = 0; i < n; i++){  
-        indexed_data->irs[i] = (struct index_record){rs[i].osm_id, &rs[i]};
-      }
+    struct index* index = malloc(n*sizeof(struct index));
+    for(int i = 0; i < n; i++){ 
+        index[i].osm_id = rs[i].osm_id;
+        index[i].original_index = i;
+    }
+    qsort(index, n, sizeof(struct index), cmpfnc);
+    indexed_data->index = index;
+    indexed_data->rs = rs;
     indexed_data->n = n;
     return indexed_data;    
 }
 
 void free_indexed(struct indexed_data* data){
-    free(data->irs);
+    free(data->index);
     free(data);
     return;
 }
 
 const struct record* lookup_binsort(struct indexed_data *data, int64_t needle){
     int n = data->n;
-    struct index_record* irs = data->irs;
-    int low = 0;
-    int high = n;
+    struct index* index = data->index;
+    int low = 0, high = n;
     int i = 0;
     while(high-low > 1){
         i = (low+high)/2;
-        if(irs[i].osm_id == needle){
-            return irs[i].record;
+        if(index[i].osm_id == needle){
+            return &data->rs[index[i].original_index];
         }
-        if (irs[i].osm_id > needle){
+        if (index[i].osm_id > needle){
             high=i;
         }
         else{
             low=i;
         }
     }
-    if(irs[high].osm_id == needle){
-        return irs[high].record;
+    if(index[high].osm_id == needle){
+        return &data->rs[index[i].original_index];
     }
     return NULL;
 }

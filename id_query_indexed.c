@@ -9,39 +9,35 @@
 #include "record.h"
 #include "id_query.h"
 
-struct index_record {
-    int64_t osm_id;
-    struct record *record;
-};
 
 struct indexed_data {
-    struct index_record *irs;
+    struct record *rs;
+    int64_t *osm_id;
     int n; 
 };
 
 struct indexed_data* mk_indexed(struct record* rs, int n){
     struct indexed_data* indexed_data = malloc(sizeof(struct indexed_data));
-    indexed_data->irs = malloc(n*sizeof(struct index_record));
+    indexed_data->osm_id = malloc(n*sizeof(int64_t));
     for(int i = 0; i < n; i++){  
-        indexed_data->irs[i] = (struct index_record){rs[i].osm_id, &rs[i]};
+        indexed_data->osm_id[i] = rs[i].osm_id;
     }
+    indexed_data->rs = rs;
     indexed_data->n = n;    
     return indexed_data;    
 }
 
 void free_indexed(struct indexed_data* data){
-    // free_records(data->irs->record, data->n);
-    free(data->irs);
+    free(data->osm_id);
     free(data);
     return;
 }
 
 const struct record* lookup_indexed(struct indexed_data *data, int64_t needle){
     int n = data->n;
-    struct index_record* irs = data->irs;
-    for (int i = 0; i<n; i++){
-        if(irs[i].osm_id == needle){
-            return irs[i].record;
+    for (int i = 0; i < n; i++){
+        if(data->osm_id[i] == needle){
+            return &data->rs[i];
         }
     }
     return NULL;
