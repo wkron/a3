@@ -8,7 +8,6 @@
 #include "record.h"
 #include "id_query.h"
 
-
 struct index {
     int64_t osm_id;
     int original_index;
@@ -69,7 +68,7 @@ const struct record* lookup_binsort(struct indexed_data *data, int64_t needle){
             low=i;
         }
     }
-    if(index[high].osm_id == needle){
+    if(index[high].osm_id == needle){ // If high-low=1, sometimes high will not be checked in the above loop due integer division rounding down.
         return &data->rs[index[i].original_index];
     }
     return NULL;

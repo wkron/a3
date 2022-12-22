@@ -8,6 +8,7 @@
 #include <math.h>
 #include "record.h"
 #include "coord_query.h"
+
 double euclidean_distance(double x1, double y1, double x2, double y2) {
   double dx = x2 - x1;
   double dy = y2 - y1;
